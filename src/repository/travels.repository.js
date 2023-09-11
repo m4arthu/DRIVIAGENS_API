@@ -8,15 +8,27 @@ export async function createTravelDB(passengerId, flightId) {
     return null;
 }
 
-export async function findTravelsDB() {
+export async function findTravelsDB(name) {
+       if(name){
         return db.query(`
         SELECT CONCAT(firstname,' ', lastname) as passenger,
         COUNT(travels.passengerid) as travels
         FROM passengers
         LEFT JOIN travels ON passengers.id = travels.passengerid
+        WHERE upper(CONCAT(firstname,' ', lastname)) LIKE upper('%${name}%')
         GROUP BY passengers.id
-        ORDER BY TRAVELS DESC
-       `)   
+        ORDER BY travels DESC
+           `)   
+       } else {   
+           return db.query(`
+           SELECT CONCAT(firstname,' ', lastname) as passenger,
+           COUNT(travels.passengerid) as travels
+           FROM passengers
+           LEFT JOIN travels ON passengers.id = travels.passengerid
+           GROUP BY passengers.id
+           ORDER BY TRAVELS DESC
+           `)   
+        }
 }
 
 export async function validTravelRequestDB(passengerId, flightId) {

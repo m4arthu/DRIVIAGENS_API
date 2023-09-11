@@ -1,20 +1,17 @@
 import { createTravelDB, findTravelsDB, validTravelRequestDB } from "../repository/travels.repository.js";
 
 async function getTravels(name) {
-    let travels = await findTravelsDB()
+    let travels 
+    if (name) {
+        travels = await findTravelsDB(name) 
+    } else {
+        travels =  await findTravelsDB()
+    }
     if (travels.length > 10) {
         throw { type: "TooManyResults", message: "Too many results" }
     }
 
-    if (name) {
-        travels.rows.map((t)=>{
-            console.log(t.passenger)
-        })
-        return travels  
-    } else {
-        return travels.rows
-    }
-
+    return travels.rows
 }
 
 async function registerTravel(passengerId, flightId) {
